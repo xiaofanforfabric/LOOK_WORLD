@@ -53,8 +53,8 @@
 ./gradlew runClient      # 开发环境启动客户端
 ```
 
-> 注：当前仓库里还没有提交 `gradlew` / `gradle-wrapper.jar`，
-> 先执行一次 `gradle wrapper --gradle-version 9.6.1` 生成即可。
+> 开发环境启动客户端时如果下载依赖慢，可以给 Gradle 配代理：
+> `./gradlew build -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=7890`
 
 ## 许可
 
