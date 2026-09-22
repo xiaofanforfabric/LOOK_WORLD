@@ -1,0 +1,41 @@
+# ===== Gradle =====
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ===== 开发环境运行目录 =====
+# 世界存档、日志、崩溃报告、配置都在这里，体积很大且属于本地数据
+run/
+run-server/
+# Fabric / loom 的开发期运行目录（如果以后加了别的 run 配置）
+run-*/
+
+# ===== IDE：IntelliJ IDEA =====
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ===== IDE：Eclipse / VSCode =====
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+
+# ===== 本地备份（我看 .bak/ 里有改动前的原文件，正式用 git 后就不需要了）=====
+.bak/
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db
+*~
+
+# ===== Java =====
+*.class
+# 崩溃时 JVM 会丢下的日志
+hs_err_pid*
+replay_pid*

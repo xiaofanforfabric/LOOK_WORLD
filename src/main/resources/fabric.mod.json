@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "look_world",
+  "version": "${version}",
+  "name": "LOOK_WORLD",
+  "description": "把世界生成的每个阶段（地形/地表/洞穴/结构）以半成品区块的形式逐步丢给客户端，看世界一层一层长出来。",
+  "authors": [
+    "xiaofan"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.xiaofan.look_world.client.Look_worldDataGenerator"
+    ],
+    "client": [
+      "com.xiaofan.look_world.client.Look_worldClient"
+    ],
+    "main": [
+      "com.xiaofan.look_world.Look_world"
+    ]
+  },
+  "mixins": [
+    "look_world.mixins.json",
+    {
+      "config": "look_world.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "~${minecraft_version}"
+  }
+}

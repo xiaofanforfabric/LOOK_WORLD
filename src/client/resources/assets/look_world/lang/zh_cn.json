@@ -1,0 +1,6 @@
+{
+  "key.categories.look_world": "世界生成预览",
+  "key.look_world.control": "打开预览控制面板",
+  "key.look_world.pause": "暂停 / 继续预览播放",
+  "key.look_world.step": "单步（推进一帧）"
+}
