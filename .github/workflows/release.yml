@@ -1,0 +1,73 @@
+name: Release
+
+# 推送标签时自动构建并发布 Release。
+# 例如：git tag v1.0.0 && git push origin v1.0.0
+on:
+  push:
+    tags:
+      - '*'          # 任意标签都触发（v1.0.0 / 1.0.0 / release-1.0 都行）
+  # 也可以在 Actions 页面手动触发，用来先验证构建能不能过
+  workflow_dispatch:
+
+permissions:
+  contents: write    # 创建 Release 需要写权限
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 布置 JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # 缓存 Gradle 依赖：第一次会下载 MC/yarn/fabric-api，能省几分钟
+      - name: 配置 Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 确保 gradlew 可执行
+        run: chmod +x gradlew
+
+      - name: 构建
+        run: ./gradlew build --stacktrace
+
+      # 构建日志（含编译警告）留着方便排查，发布失败时尤其有用
+      - name: 上传构建日志（仅失败时）
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: build/reports/problems/
+          if-no-files-found: ignore
+
+      # 只发布 mod 本体，不带上 sources jar
+      - name: 收集产物
+        id: artifacts
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(build/libs/*.jar)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::error::build/libs 下没有产物，构建可能没真正成功"
+            exit 1
+          fi
+          printf '找到产物：\n'
+          printf '  %s\n' "${files[@]}"
+          {
+            echo "files<<EOF"
+            printf '%s\n' "${files[@]}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # 标签名就是版本号；自动生成 release notes（按提交分类）
+          generate_release_notes: true
+          files: ${{ steps.artifacts.outputs.files }}
+          fail_on_unmatched_files: true
